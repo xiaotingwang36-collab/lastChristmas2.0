@@ -1,0 +1,168 @@
+```
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一封贺卡</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif;}
+        body{
+            height:100vh;
+            /* 渐变星空背景 */
+            background: linear-gradient(145deg, #0f0f23, #200b29, #1a1a2e);
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        .mask{
+            position:fixed;
+            inset:0;
+            background: rgba(15,15,35,0.85);
+            backdrop-filter: blur(6px);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            font-size:22px;
+            z-index:99;
+            cursor:pointer;
+        }
+        .mask-text{
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,100%{opacity:0.7;}
+            50%{opacity:1;}
+        }
+        .card{
+            width:90%;
+            max-width:440px;
+            background: rgba(255,255,255,0.92);
+            border-radius:20px;
+            padding:45px 35px;
+            text-align:center;
+            box-shadow: 0 0 40px rgba(255,150,180,0.45);
+            opacity:0;
+            transform: translateY(40px) scale(0.94);
+        }
+        @keyframes fadeIn{
+            to{opacity:1;transform: translateY(0) scale(1);}
+        }
+        h2{
+            color:#c84b78;
+            margin-bottom:22px;
+            text-shadow: 0 0 8px #ffb8cc88;
+            font-size:26px;
+        }
+        p{
+            font-size:18px;
+            color:#333;
+            line-height:1.9;
+        }
+        .tip{
+            margin-top:28px;
+            font-size:15px;
+            color:#888;
+        }
+        /* 飘落爱心 */
+        .heart{
+            position:absolute;
+            color:#ff6b8b;
+            font-size:26px;
+            animation: fall 7s linear infinite;
+            pointer-events:none;
+        }
+        @keyframes fall{
+            0%{transform:translateY(-50px) rotate(0deg);opacity:1;}
+            100%{transform:translateY(100vh) rotate(360deg);opacity:0;}
+        }
+        /* 额外闪烁星光小点 */
+        .star{
+            position:absolute;
+            width:4px;
+            height:4px;
+            background:#fff;
+            border-radius:50%;
+            animation: twinkle 2.5s infinite;
+            pointer-events:none;
+        }
+        @keyframes twinkle{
+            0%,100%{opacity:0.2;}
+            50%{opacity:1;}
+        }
+    </style>
+</head>
+<body>
+    <div class="mask" id="mask">
+        <div class="mask-text">✨点击屏幕，开启贺卡✨</div>
+    </div>
+    <div class="card" id="card">
+        <h2>✨ 致我的朋友 ✨</h2>
+        <p>
+            感谢我们的相遇<br>
+            
+        </p>
+        <div class="tip">愿你天天开心</div>
+    </div>
+    <audio id="bgMusic" loop>
+        <source src="lastChristmas MR.mp3" type="audio/mpeg">
+    
+
+       <script>
+        const mask = document.getElementById("mask");
+        const card = document.getElementById("bgMusic");
+        const audio = document.getElementById("bgMusic");
+        let canSeek = false;
+
+        // 音频加载就绪，标记可以跳转时间
+        audio.addEventListener('loadedmetadata', () => {
+            canSeek = true;
+        });
+
+        mask.addEventListener("click",()=>{
+            mask.style.display = "none";
+            card.style.animation = "fadeIn 1.5s forwards";
+            // 如果音频准备好了就跳到210秒，没准备好就等加载完再跳
+            if(canSeek){
+                audio.currentTime = 210;
+            }else{
+                audio.addEventListener('loadedmetadata',()=>{
+                    audio.currentTime = 210;
+                },{once:true})
+            }
+            audio.play();
+            startHeart();
+        })
+
+        // 爱心飘落
+        function startHeart(){
+            function createHeart(){
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerText = "❤";
+                heart.style.left = Math.random()*100 + "vw";
+                heart.style.animationDuration = (Math.random()*3 +4)+"s";
+                document.body.appendChild(heart);
+                setTimeout(()=>heart.remove(),7000);
+            }
+            setInterval(createHeart,260);
+        }
+        // 背景星光
+        function createStars(){
+            for(let i=0;i<60;i++){
+                const star = document.createElement('div');
+                star.classList.add("star");
+                star.style.left = Math.random()*100 +"vw";
+                star.style.top = Math.random()*100 +"vh";
+                star.style.animationDelay = Math.random()*2 +"s";
+                document.body.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+
+</body>
+</html>
+```
